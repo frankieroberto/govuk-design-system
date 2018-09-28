@@ -2,33 +2,10 @@
   $toc-width: 260px;
   $toc-width-tablet: 210px;
 
-  .app-pane.app-pane--enabled {
-
-    @include govuk-media-query($from: tablet) {
-      display: flex;
-      flex-direction: column;
-    }
-  }
-
-  .app-pane__header {
-    @include govuk-media-query($from: tablet) {
-      display: flex;
-      flex-direction: column;
-      flex: 1 0 auto;
-
-      > * {
-        flex: 1 0 auto;
-      }
-    }
-  }
-
   .app-pane__body {
     @include govuk-media-query($from: tablet) {
-      display: flex;
       position: relative;
-      min-height: 0;
-      flex: 1 1 100%;
-
+      @include govuk-clearfix;
       .app-pane__content {
         overflow-x: scroll;
         -webkit-overflow-scrolling: touch;
@@ -40,7 +17,7 @@
   .app-pane__subnav {
     @include govuk-media-query($from: tablet) {
       width: $toc-width-tablet;
-      flex: 0 0 auto;
+      float: left;
     }
     @include govuk-media-query($from: desktop) {
       width: $toc-width;
@@ -48,18 +25,7 @@
   }
 
   .app-pane__content {
-    @include govuk-media-query($from: tablet) {
-      display: flex;
-      margin-left: auto;
-      flex: 1 1 100%;
-      flex-direction: column;
-
-      // Stick footer to bottom of screen if content is shorter than viewport
-      main {
-        display: block;
-        flex: 1 0 auto;
-      }
-    }
+    margin-left: auto;
   }
 
   .no-flexbox {
