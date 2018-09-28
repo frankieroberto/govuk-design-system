@@ -59,13 +59,55 @@
 	<div class="app-tabs__heading js-tabs__heading{{ " js-tabs__heading--open" if (params.open) }}"><a href="#{{ exampleId }}-nunjucks" role="tab" aria-controls="{{ exampleId }}-nunjucks" data-track="tab-nunjucks">Nunjucks</a></div>
   {% endif %}
   <div class="app-tabs__container js-tabs__container{{ " js-tabs__container--no-tabs" if (params.hideTab) }}" id="{{ exampleId }}-nunjucks" role="tabpanel">
+    {%- if (params.group == 'components') %}
+      {% set macroOptions = getMacroOptions(params.item) %}
+
+      {% set macroOptionsHTML %}
+
+        <p>
+          If you’re using Nunjucks macros in production be aware that using html options, or ones ending with Html can be a <a href="https://en.wikipedia.org/wiki/Cross-site_scripting">security risk</a>. Read more about it in the <a href="https://mozilla.github.io/nunjucks/api.html#user-defined-templates-warning">Nunjucks documentation</a>.
+        </p>
+
+        {% for table in macroOptions %}
+
+          <table class="govuk-table" id="nunjucks-macro-options-{{table.id}}">
+            <caption class="govuk-table__caption govuk-heading-m {% if table.id == 'primary' %} govuk-visually-hidden{% endif %}">{{ table.name }}</caption>
+            <thead class="govuk-table__head">
+              <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">Name</th>
+                <th class="govuk-table__header" scope="col">Type</th>
+                <th class="govuk-table__header" scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+
+              {% for option in table.options %}
+                <tr class="govuk-table__row">
+                  <th class="govuk-table__header" scope="row">{{option.name}}</th>
+                  <td class="govuk-table__cell ">{{option.type}}</td>
+                  <td class="govuk-table__cell ">{{option.description | safe}}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endfor %}
+
+      {% endset %}
+
+      {% from "details/macro.njk" import govukDetails %}
+
+      {{ govukDetails({
+        summaryText: "Nunjucks macro options",
+        html: macroOptionsHTML,
+        classes: "app-tabs__details",
+        attributes:{
+          id: "nunjucks-macro-options"
+        }
+      })}}
+    {% endif %}
     <pre data-module="app-copy"><code class="hljs js">
       {{- getNunjucksCode(examplePath) | highlight('js') | safe -}}
     </code></pre>
-
-  {%- if (params.group == 'components') %}
-    <p class="app-tabs__text">You can configure this component using the <a href="https://github.com/alphagov/govuk-frontend/tree/master/package/components/{{frontendComponentName}}/README.md#component-arguments" class="govuk-link"  target="_blank" data-components="github-component-arguments" rel="noopener">Nunjucks macro arguments</a>.</p>
-  {% endif %}
   </div>
   {% endif %}
 </div>
