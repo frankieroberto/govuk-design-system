@@ -134,12 +134,43 @@ Search.prototype.init = function () {
     tNoResults: function () { return statusMessage }
   })
 
-  // Ensure the Button (which is a background image of the wrapper) focuses the input when clicked.
   var $wrapper = $module.querySelector('.app-site-search__wrapper')
+  var $input = $module.querySelector('.app-site-search__input')
+
+  // Since the autocomplete does not have events we add additional listeners
+  // which allows for tracking of certain events.
+
+  // We want to wait a bit before firing events to indicate that 
+  // someone is looking at a result and not that it's come up in passing.
+  var timeToWait = 2 // seconds
+  var eventTimer
+  $input.addEventListener('input', function (event) {
+    clearTimeout(eventTimer)
+    eventTimer = setTimeout(function () {
+      var $options = 
+        document
+          .querySelector('.app-site-search__menu')
+          .querySelectorAll('.app-site-search__option')
+      console.log($options[0].classList)
+      console.log(
+        stripPossiblePII($input.value)
+      )
+    }, timeToWait * 1000)
+  })
+
+  function stripPossiblePII (string) {
+    // Try to detect emails and redact it.
+    string = string.replace(/\S*@\S*\s?/g, '[redacted]')
+    // If someone has typed in a number it's likely not related so redact it
+    string = string.replace(/0|1|2|3|4|5|6|7|8|9/g, '[redacted]')
+    return string
+  }
+
+  // Ensure the Button (which is a background image of the wrapper) focuses the input when clicked.
   $wrapper.addEventListener('click', function (event) {
     // Only focus the input if the user clicks the wrapper and not the input.
     if (event.target === $wrapper) {
-      $module.querySelector('.app-site-search__input').focus()
+      $input.focus()
     }
   })
 
