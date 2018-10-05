@@ -12,6 +12,7 @@ Example.prototype.init = function () {
     return
   }
   this.resize()
+  this.expandMacroOptions()
 }
 Example.prototype.resize = function () {
   var $module = this.$module
@@ -22,6 +23,26 @@ Example.prototype.resize = function () {
   } catch (err) {
     if (err) {
       console.error(err.message)
+    }
+  }
+}
+
+// Open Nunjucks tab and expand macro options details when URL hash is 'nunjucks-options-[example]'
+Example.prototype.expandMacroOptions = function () {
+  var hash = window.location.hash
+
+  if (hash.match('^#nunjucks-options-')) {
+    var exampleName = hash.split('#nunjucks-options-')[1]
+
+    if (exampleName) {
+      var tabLink = document.getElementById(exampleName += '-nunjucks') // Tab link for the example
+      var tabHeading = tabLink ? tabLink.parentNode : null
+      var optionsDetailsElement = document.getElementById(hash.substring(1))
+
+      if (tabHeading && optionsDetailsElement) {
+        tabHeading.className += 'app-tabs__item--current'
+        optionsDetailsElement.open = true
+      }
     }
   }
 }
