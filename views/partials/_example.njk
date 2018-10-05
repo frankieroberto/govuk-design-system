@@ -70,7 +70,7 @@
 
         {% for table in macroOptions %}
 
-          <table class="govuk-table" id="nunjucks-macro-options-{{table.id}}">
+          <table class="govuk-table" id="nunjucks-options-table-{{table.id}}">
             <caption class="govuk-table__caption govuk-heading-m {% if table.id == 'primary' %} govuk-visually-hidden{% endif %}">{{ table.name }}</caption>
             <thead class="govuk-table__head">
               <tr class="govuk-table__row">
@@ -101,7 +101,7 @@
         html: macroOptionsHTML,
         classes: "app-tabs__details",
         attributes:{
-          id: "nunjucks-macro-options"
+          id: "nunjucks-options-" + exampleId
         }
       })}}
     {% endif %}
