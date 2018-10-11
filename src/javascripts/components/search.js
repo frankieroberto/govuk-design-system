@@ -121,6 +121,18 @@ Search.prototype.init = function () {
     return
   }
 
+  // The Accessible Autocomplete only works in IE9+ so we can use newer JavaScript features here
+  // but need to check for browsers that do not have these features and force the fallback by returning early.
+  // http://responsivenews.co.uk/post/18948466399/cutting-the-mustard
+  var cutsTheMustard = (
+    'querySelector' in document &&
+    !!(Array.prototype && Array.prototype.forEach)
+  )
+
+  if (!cutsTheMustard) {
+    return
+  }
+
   accessibleAutocomplete({
     element: $module,
     id: 'app-site-search__input',
@@ -144,7 +156,7 @@ Search.prototype.init = function () {
   // Since the autocomplete does not have events we add additional listeners
   // which allows for tracking of certain events.
 
-  // We want to wait a bit before firing events to indicate that 
+  // We want to wait a bit before firing events to indicate that
   // someone is looking at a result and not that it's come up in passing.
   var timeToWait = 2 // seconds
   var eventTimer

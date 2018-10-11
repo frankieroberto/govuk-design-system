@@ -1,3 +1,7 @@
+import 'govuk-frontend/vendor/polyfills/Element/prototype/classList'
+import common from 'govuk-frontend/common'
+var nodeListForEach = common.nodeListForEach
+
 function addToDataLayer (payload) {
   window.dataLayer = window.dataLayer || []
   window.dataLayer.push(payload)
@@ -11,31 +15,48 @@ function stripPossiblePII (string) {
   return string
 }
 
+function getSearchResults ($module) {
+  var $options = $module.querySelectorAll('.app-site-search__option')
+
+  return nodeListForEach($options).map(function ($option, key) {
+    var $section = $option.querySelector('.app-site-search--section')
+    var section = $section ? $section.textContent : ''
+    var $aliases = $option.querySelector('.app-site-search__aliases')
+    var aliases = $aliases ? $aliases.textContent : ''
+    var title = $option.textContent.replace(section, '').replace(aliases, '')
+    return {
+      title: title,
+      section: section,
+      aliases: aliases
+    }
+  })
+}
+
+function getSearchTerm ($module) {
+  var $input = $module.querySelector('.app-site-search__input')
+  return stripPossiblePII($input.value)
+}
+
 function trackConfirm ($module, result) {
   if (window.DO_NOT_TRACK_ENABLED) {
     return
   }
 
-  var $input = $module.querySelector('.app-site-search__input')
-  var searchTerm = stripPossiblePII($input.value)
-
-  var $options = $module.querySelectorAll('.app-site-search__option')
-
-  var products = Array.from($options).map(function ($option, key) { // Array.from Needs polyfilling etc? Autocomplete only works in IE9+...
-    var $section = $option.querySelector('.app-site-search--section')
-    var category = $section ? $section.textContent : ''
-    var $aliases = $option.querySelector('.app-site-search__aliases')
-    var aliases = $aliases ? $aliases.textContent : ''
-    var name = $option.textContent.replace(category, '').replace(aliases, '')
-    return {
-      name: name,
-      category: category,
-      list: searchTerm, // Used to match an searchTerm with results
-      position: (key + 1)
-    }
-  }).filter(function (product) {
-    return product.name === result.title
-  })
+  var searchTerm = getSearchTerm($module)
+  var searchResults = getSearchResults($module)
+  var products =
+    searchResults
+      .map(function (result, key) {
+        return {
+          name: result.title,
+          category: result.section,
+          list: searchTerm, // Used to match an searchTerm with results
+          position: (key + 1)
+        }
+      })
+      .filter(function (product) {
+        return product.name === result.title
+      })
 
   addToDataLayer({
     event: 'site-search',
@@ -53,31 +74,27 @@ function trackConfirm ($module, result) {
   })
 }
 
-function trackInput ($module, $input) {
+function trackInput ($module) {
   if (window.DO_NOT_TRACK_ENABLED) {
     return
   }
 
-  var $options = $module.querySelectorAll('.app-site-search__option')
-  var searchTerm = stripPossiblePII($input.value)
+  var searchTerm = getSearchTerm($module)
+  var searchResults = getSearchResults($module)
 
-  if ($options.length === 0) {
+  if (searchResults.length === 0) {
     return
   }
 
-  var hasResults = !$options[0].classList.contains('app-site-search__option--no-results') // Class list polyfill?
+  console.log(searchResults)
+  var hasResults = true
   var impressions = []
   if (hasResults) {
     // Impressions is Google Analytics lingo for what people have seen.
-    impressions = Array.from($options).map(function ($option, key) { // Array.from Needs polyfilling etc? Autocomplete only works in IE9+...
-      var $section = $option.querySelector('.app-site-search--section')
-      var category = $section ? $section.textContent : ''
-      var $aliases = $option.querySelector('.app-site-search__aliases')
-      var aliases = $aliases ? $aliases.textContent : ''
-      var name = $option.textContent.replace(category, '').replace(aliases, '')
+    impressions = searchResults.map(function (result, key) {
       return {
-        name: name,
-        category: category,
+        name: result.title,
+        category: result.section,
         list: searchTerm, // Used to match an searchTerm with results
         position: (key + 1)
       }
