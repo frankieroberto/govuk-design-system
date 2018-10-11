@@ -18,18 +18,20 @@ function stripPossiblePII (string) {
 function getSearchResults ($module) {
   var $options = $module.querySelectorAll('.app-site-search__option')
 
-  return nodeListForEach($options).map(function ($option, key) {
+  var results = []
+  nodeListForEach($options, function ($option, key) {
     var $section = $option.querySelector('.app-site-search--section')
     var section = $section ? $section.textContent : ''
     var $aliases = $option.querySelector('.app-site-search__aliases')
     var aliases = $aliases ? $aliases.textContent : ''
     var title = $option.textContent.replace(section, '').replace(aliases, '')
-    return {
+    results.push({
       title: title,
       section: section,
       aliases: aliases
-    }
+    })
   })
+  return results
 }
 
 function getSearchTerm ($module) {
@@ -55,6 +57,7 @@ function trackConfirm ($module, result) {
         }
       })
       .filter(function (product) {
+        // Only return the product that matches what was clicked
         return product.name === result.title
       })
 
@@ -86,8 +89,7 @@ function trackInput ($module) {
     return
   }
 
-  console.log(searchResults)
-  var hasResults = true
+  var hasResults = (searchResults[0].title !== 'No results found')
   var impressions = []
   if (hasResults) {
     // Impressions is Google Analytics lingo for what people have seen.
