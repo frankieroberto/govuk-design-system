@@ -2,6 +2,8 @@
 import accessibleAutocomplete from 'accessible-autocomplete'
 import lunr from 'lunr'
 
+import { trackInput, trackConfirm } from './search.tracking.js'
+
 // CONSTANTS
 var TIMEOUT = 10 // Time to wait before giving up fetching the search index
 var STATE_DONE = 4 // XHR client readyState DONE
@@ -65,9 +67,11 @@ Search.prototype.handleSearchQuery = function (query, callback) {
 
 Search.prototype.handleOnConfirm = function (result) {
   var path = result.path
-  if (path) {
-    window.location.href = '/' + path
+  if (!path) {
+    return
   }
+  trackConfirm(this.$module, result)
+  window.location.href = '/' + path
 }
 
 Search.prototype.inputValueTemplate = function (result) {
@@ -126,10 +130,10 @@ Search.prototype.init = function () {
     confirmOnBlur: false,
     autoselect: true,
     source: this.handleSearchQuery.bind(this),
-    onConfirm: this.handleOnConfirm,
+    onConfirm: this.handleOnConfirm.bind(this),
     templates: {
-      inputValue: this.inputValueTemplate,
-      suggestion: this.resultTemplate
+      inputValue: this.inputValueTemplate.bind(this),
+      suggestion: this.resultTemplate.bind(this)
     },
     tNoResults: function () { return statusMessage }
   })
@@ -147,24 +151,12 @@ Search.prototype.init = function () {
   $input.addEventListener('input', function (event) {
     clearTimeout(eventTimer)
     eventTimer = setTimeout(function () {
-      var $options = 
-        document
-          .querySelector('.app-site-search__menu')
-          .querySelectorAll('.app-site-search__option')
-      console.log($options[0].classList)
-      console.log(
-        stripPossiblePII($input.value)
-      )
+      trackInput($module, $input)
     }, timeToWait * 1000)
   })
-
-  function stripPossiblePII (string) {
-    // Try to detect emails and redact it.
-    string = string.replace(/\S*@\S*\s?/g, '[redacted]')
-    // If someone has typed in a number it's likely not related so redact it
-    string = string.replace(/0|1|2|3|4|5|6|7|8|9/g, '[redacted]')
-    return string
-  }
+  $input.addEventListener('blur', function (event) {
+    clearTimeout(eventTimer)
+  })
 
   // Ensure the Button (which is a background image of the wrapper) focuses the input when clicked.
   $wrapper.addEventListener('click', function (event) {
