@@ -174,7 +174,7 @@ describe('Site search', () => {
       await page.focus('.app-site-search__input')
       await page.type('.app-site-search__input', 'g')
       await timeout(SEARCH_TRACKING_TIMEOUT)
-      const optionResults = await page.$$eval('.app-site-search__option')
+      const optionResults = await page.$$('.app-site-search__option')
       const GoogleTagManagerDataLayer = await page.evaluate(() => window.dataLayer)
 
       expect(GoogleTagManagerDataLayer[0].ecommerce.impressions.length).toEqual(optionResults.length)
