@@ -1,0 +1,85 @@
+---
+title: Security code
+description: Identifying users when they sign in
+section: Patterns
+theme: Ask users for…
+aliases: 2FA
+backlog_issue_id: 25
+layout: layout-pane.njk
+---
+
+{% from "_example.njk" import example %}
+
+Use this pattern to verify users via a security code sent to their phone.
+
+{{ example({group: "patterns", item: "security-code", example: "default", html: true, nunjucks: true, open: false}) }}
+
+## When to use this pattern
+
+Use this pattern if your users need to sign in to your service.
+
+Requiring users to enter a security code sent to their mobile phone provides a second layer of security over a [password](/patterns/passwords/).
+
+You can require a security code on every sign in or only once per device, depending upon the risk of your service.
+
+## How it works
+
+You should first ask users for their [password](/patterns/passwords/). Once they have successfully entered this, send a text message to their mobile phone with a 5 digit code in this format:
+
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{{ govukInsetText({
+  text: "12345 is your [service name] security code"
+}) }}
+
+Then ask the user to enter this code:
+
+{{ example({group: "patterns", item: "security-code", example: "default", html: true, nunjucks: true, open: true}) }}
+
+### Expiry
+
+There should be a time limit of 15 minutes for users to enter the code. If this time limit expires, display an error and send the user a new code:
+
+{{ example({group: "patterns", item: "security-code", example: "error-expired", html: true, nunjucks: true, open: false}) }}
+
+### Resending
+
+You should also allow users to request a new code, if the first one does not arrive, as text messages can be delayed.
+
+Use this page, via the "Not received a text message?" link:
+
+{{ example({group: "patterns", item: "security-code", example: "resend", html: true, nunjucks: true, open: false}) }}
+
+This should send a new code, with its own 15 minute expiry window. However the previous code should remain valid within its own expiry time.
+
+### Error messages
+
+Error messages should be styled like this:
+
+{{ example({group: "patterns", item: "security-code", example: "error-incorrect", html: true, nunjucks: true, open: false}) }}
+
+If the user doesn’t enter enough digits:
+
+Say ‘You haven’t entered enough numbers’.
+
+If the user enters too many digits:
+
+Say ‘You’ve entered too many numbers’.
+
+If the user enters non-numeric characters, other than spaces:
+
+Say ‘The code must be 5 numbers’.
+
+## Research on this pattern
+
+TODO
+
+
+### Services using this pattern
+
+This pattern has been used in a number of services, including the following:
+
+**Government Digital Service**<br>
+GOV.UK Notify
+
+**Office for Product Safety and Standards**<br>
+Product Safety Database
