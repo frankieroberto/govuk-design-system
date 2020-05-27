@@ -51,6 +51,14 @@ Use this page, via the "Not received a text message?" link:
 
 This should send a new code, with its own 15 minute expiry window. However the previous code should remain valid within its own expiry time.
 
+### First time usage
+
+When the user first enters their mobile number, for example when setting up an account for your service, verify their mobile number straight away by sending a security code and asking for it.
+
+If the user follows the ‘Not received a text message?’ link, allow them to check which mobile number they entered, and to change it if necessary. This prevents the user becoming stuck if they entered a mobile number incorrectly.
+
+{{ example({group: "patterns", item: "security-code", example: "resend-first-time", html: true, nunjucks: true, open: false}) }}
+
 ### Error messages
 
 Error messages should be styled like this:
