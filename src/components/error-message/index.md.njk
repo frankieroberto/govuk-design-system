@@ -21,7 +21,9 @@ Use standard messages for different components.
 
 ## When not to use this component
 
-Do not use error messages to tell users that they are not eligible or do not have permission to do something. Instead, take them to a page which tells them they’re not eligible and gives them useful information about what to do next.
+Do not use error messages to tell a user that they are not eligible or do not have permission to do something. Or to tell them about a lack of capacity or other problem the user cannot fix - because the problem is with the service rather than with the information the user has provided.
+
+Instead, take the user to a page that explains the problem (for example, telling them why they’re not eligible) and provides useful information about what to do next.
 
 There are separate patterns for:
 
@@ -35,7 +37,7 @@ For each error:
 
 - put the message in red after the question text and hint text
 - use a red border to visually connect the message and the question it belongs to
-- if the error relates to specific text fields within the question, give these a red border as well
+- if the error relates to a specific field within the question, give it a red border and refer to that field in the error message - for example: "you must enter a year"
 
 To help screen reader users, the error message component includes a hidden 'Error:' before the error message. These users will hear, for example, "Error: The date your passport was issued must be in the past".
 
@@ -122,7 +124,6 @@ Use template messages for common errors on:
 - [character count](/components/character-count/#error-messages)
 - [checkboxes](/components/checkboxes/#error-messages)
 - [date input](/components/date-input/#error-messages)
-- [dates](/patterns/dates/#error-messages)
 - [ethnic group](/patterns/ethnic-group/#error-messages)
 - [email address](/patterns/email-addresses/#error-messages)
 - [file upload](/components/file-upload/#error-messages)

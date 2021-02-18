@@ -7,7 +7,9 @@ layout: layout-example.njk
 
 {{ govukInput({
   label: {
-    text: "Account number"
+    text: "What is your account number?",
+    classes: "govuk-label--l",
+    isPageHeading: true
   },
   classes: "govuk-input--width-10",
   hint: {
@@ -17,7 +19,5 @@ layout: layout-example.njk
   name: "account-number",
   inputmode: "numeric",
   pattern: "[0-9]*",
-  attributes: {
-    spellcheck: "false"
-  }
+  spellcheck: false
 }) }}
