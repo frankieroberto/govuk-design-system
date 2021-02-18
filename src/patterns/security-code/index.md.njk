@@ -31,6 +31,14 @@ You should first ask users for their [password](/patterns/passwords/). Once they
   text: "12345 is your [service name] security code"
 }) }}
 
+You can also follow the emerging [domain-bound codes](https://developer.apple.com/news/?id=z0i801mg) standard, and include the domain of the service on a new line, prefixed with an `@`, followed by a `#` symbol and the code, like this:
+
+{{ govukInsetText({
+html: "12345 is your [service name] security code<br><br>@example.com #12345"
+}) }}
+
+This improves security by associating the code with a specific domain, allowing browsers to safely autofill it.
+
 Then ask the user to enter this code:
 
 {{ example({group: "patterns", item: "security-code", example: "default", html: true, nunjucks: true, open: true}) }}
