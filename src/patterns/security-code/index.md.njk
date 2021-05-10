@@ -24,17 +24,17 @@ You can require a security code on every sign in or only once per device, depend
 
 ## How it works
 
-You should first ask users for their [password](/patterns/passwords/). Once they have successfully entered this, send a text message to their mobile phone with a 5 digit code in this format:
+You should first ask users for their [password](/patterns/passwords/). Once they have successfully entered this, send a text message to their mobile phone with a 4 digit code in this format:
 
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {{ govukInsetText({
-  text: "12345 is your [service name] security code"
+  text: "1234 is your [service name] security code"
 }) }}
 
 You can also follow the emerging [domain-bound codes](https://developer.apple.com/news/?id=z0i801mg) standard, and include the domain of the service on a new line, prefixed with an `@`, followed by a `#` symbol and the code, like this:
 
 {{ govukInsetText({
-html: "12345 is your [service name] security code<br><br>@example.com #12345"
+html: "1234 is your [service name] security code<br><br>@example.com #1234"
 }) }}
 
 This improves security by associating the code with a specific domain, allowing browsers to safely autofill it.
@@ -89,7 +89,13 @@ Say ‘You’ve entered too many numbers’.
 
 If the user enters non-numeric characters, other than spaces:
 
-Say ‘The code must be 5 numbers’.
+Say ‘The code must be 4 numbers’.
+
+### Technical security measures
+
+You should implement [technical measures to prevent automated attacks](https://www.ncsc.gov.uk/collection/passwords/updating-your-approach#tip2-password-collection), such as introducing a time delay after 10 incorrect number entries.
+
+You should also set up monitoring for potentially malicious behaviour, such as activity from unexpected geographical areas.
 
 ## Research on this pattern
 
