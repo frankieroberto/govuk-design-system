@@ -53,6 +53,14 @@ If you do not include actions in your summary list and it would be better for yo
 
 To remove borders on a single row, use the `govuk-summary-list__row--no-border` class.
 
+### Summary list with missing information
+
+There may be some contexts where users see a summary list where there is some missing information, for instance if they are returning to a partially-completed form, or if you have added some additional questions since they first answered.
+
+Where there are missing answers, display a link to the question page within the `value` column instead of as a "Change" action:
+
+{{ example({group: "components", item: "summary-list", example: "with-missing-information", html: true, nunjucks: true, open: false}) }}
+
 ## Research on this component
 
 This component was developed and tested by the Government Digital Services as part of the [check answers pattern](/patterns/check-answers).
